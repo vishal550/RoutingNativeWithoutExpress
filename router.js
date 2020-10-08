@@ -1,16 +1,35 @@
 const handlerFactory = require('./handler');
 const parser = require('url');
-const handlers = {};
+const handlers = {
+    'GET': {
+
+    },
+    'POST': {
+
+    }
+};
 
 class Router {
-    register(url, method) {
-        handlers[url] = handlerFactory.createHandler(method);
+    registerPost(url, method) {
+        handlers.POST[url] = handlerFactory.createHandler(method);
+    }
+
+    registerGet(url, method) {
+        handlers.GET[url] = handlerFactory.createHandler(method);
     }
 
     route(req) {
         let url = parser.parse(req.url, true);
-        let handler = handlers[url.pathname];
-        if (!handler) handler = this.missing(req)
+        let handler;
+        console.log()
+        if (req.method === 'GET') {
+            handler = handlers.GET[url.pathname];
+        } else if (req.method === 'POST') {
+            handler = handlers.POST[url.pathname];
+        } else {
+            handler = this.missing(req);
+        }
+        handler = handler || this.missing(req);
         return handler;
     }
 

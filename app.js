@@ -6,6 +6,7 @@ const snap = require('./snapshot');
 // We need a server which relies on our router
 const server = http.createServer((req, res) => {
     handler = router.route(req);
+    console.log(handler)
     handler.process(req, res);
 });
 
